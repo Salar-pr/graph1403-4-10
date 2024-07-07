@@ -1,7 +1,11 @@
+# فراخانی کاتبخانه ها
 import random
 import itertools
+#pip install networkx
 import networkx as nx
+#pip install matplotlib
 import matplotlib.pyplot as plt
+
 
 # تابعی برای بررسی معتبر بودن رنگ‌آمیزی
 def is_valid_coloring(graph, coloring):
@@ -21,7 +25,7 @@ def greedy_coloring(graph):
     return coloring
 
 # دریافت تعداد گره‌ها از ورودی
-n_node = int(input("تعداد گره‌ها را وارد کنید: "))
+n_node = int(input("enter count nodes: "))
 G = nx.Graph()
 G.add_nodes_from(range(n_node))
 
@@ -33,8 +37,8 @@ for i in range(n_node):
 
 # انجام رنگ‌آمیزی حریصانه
 coloring_result = greedy_coloring(G)
-print('رنگ‌آمیزی:', coloring_result)
-print('معتبر:', is_valid_coloring(G, coloring_result))
+print('coloring:', coloring_result)
+print('valid:', is_valid_coloring(G, coloring_result))
 print('k:', len(set(coloring_result.values())))
 
 # نمایش گراف با رنگ‌آمیزی
