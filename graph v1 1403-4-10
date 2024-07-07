@@ -1,32 +1,39 @@
-def is_valid(graph, colors, v, c):
-    for i, has_edge in enumerate(graph[v]):
-        if has_edge and colors[i] == c:
-            return False
-    return True
+import random
+import itertools
+import networkx as nx
+import matplotlib.pyplot as plt
 
-def graph_coloring(graph, m, colors, v):
-    if v == len(graph):
+
+def is_valid_coloring(graph, coloring):
+    for u, v in graph.edges():
+        if coloring[u] == coloring[v]:
+            return False
         return True
 
-    for c in range(1, m + 1):
-        if is_valid(graph, colors, v, c):
-            colors[v] = c
-            if graph_coloring(graph, m, colors, v + 1):
-                return True
-            colors[v] = 0
 
-    return False
+def greedy_coloring(graph):
+    coloring = {}
+    for node in graph.nodes():
+        adjacent_colors = {coloring.get(neighbor)
+                           for neighbor in graph.neighbors(node)}
+        coloring[node] = next(
+            color for color in itertools.count() if color not in adjacent_colors)
+    return coloring
 
-# مثال:
-graph = [
-    [0, 1, 1, 1],
-    [1, 0, 1, 0],
-    [1, 1, 0, 1],
-    [1, 0, 1, 0]
-]
-colors = [0] * 4
-m = 3  # تعداد رنگ‌ها
-if graph_coloring(graph, m, colors, 0):
-    print(colors)
-else:
-    print("No solution")
+
+n_node = int(input("enter count nodes:"))
+G = nx.Graph()
+G.add_nodes_from(range(n_node))
+for i in range(n_node):
+    for j in (i+1, range(n_node)):
+        if random.random() < 0.1:
+            G.add_edge(i, j)
+
+coloring_result = greedy_coloring(G)
+print('coloring:', coloring_result)
+print('valid:', is_valid_coloring(G, coloring_result))
+print('k:', len(set(coloring_result.values())))
+
+color_map = [coloring_result[node] for node in G.nodes()]
+nx.draw(G, node_color=color_map, with_labels=True, font_weight='bold')
+plt.show()
